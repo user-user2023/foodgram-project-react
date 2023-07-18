@@ -7,7 +7,7 @@ load_dotenv(find_dotenv())
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-###BASE_DIR = Path(__file__).resolve().parent.parent
+# BASE_DIR = Path(__file__).resolve().parent.parent
 
 BASE_DIR: Path = Path(__file__).resolve().parent.parent.parent
 
@@ -98,28 +98,32 @@ WSGI_APPLICATION = 'foodgram.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-#DATABASES = {
+# DATABASES = {
 #    'default': {
 #        'ENGINE': 'django.db.backends.sqlite3',
 #        'NAME': BASE_DIR / 'db.sqlite3',
 #    }
-#}
+# }
+
+# DATABASES = {
+#     'default': {
+# ##        'ENGINE': os.getenv('DB_ENGINE', default='django.db.backends.postgresql'),
+# ##        'NAME': os.getenv('DB_NAME', default='postgres'),
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+# #        'USER': os.getenv('POSTGRES_USER', default='postgres'),
+# #        'PASSWORD': os.getenv('POSTGRES_PASSWORD', default='00001'),
+# #        'HOST': os.getenv('DB_HOST', default='db'),
+# #        'PORT': os.getenv('DB_PORT', default=5432),
+#     }
+# }
 
 DATABASES = {
     'default': {
-##        'ENGINE': os.getenv('DB_ENGINE', default='django.db.backends.postgresql'),
-##        'NAME': os.getenv('DB_NAME', default='postgres'),
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
-#        'USER': os.getenv('POSTGRES_USER', default='postgres'),
-#        'PASSWORD': os.getenv('POSTGRES_PASSWORD', default='00001'),
-#        'HOST': os.getenv('DB_HOST', default='db'),
-#        'PORT': os.getenv('DB_PORT', default=5432),
     }
 }
-
-
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

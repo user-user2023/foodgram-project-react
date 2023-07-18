@@ -84,9 +84,9 @@ class RecipeViewSet(viewsets.ModelViewSet, CreateOrDeleteMixin):
         return CreateRecipeSerializer
 
     @action(
-            methods=['POST', 'DELETE'],
-            detail=True,
-            permission_classes=[IsAuthenticated],
+        methods=['POST', 'DELETE'],
+        detail=True,
+        permission_classes=[IsAuthenticated],
     )
     def favorite(self, request, pk=None):
         if request.method == 'POST':
@@ -95,9 +95,9 @@ class RecipeViewSet(viewsets.ModelViewSet, CreateOrDeleteMixin):
             return self.delete_favorite(Favorite, pk, request)
 
     @action(
-            methods=['POST', 'DELETE'],
-            detail=True,
-            permission_classes=[IsAuthenticated],
+        methods=['POST', 'DELETE'],
+        detail=True,
+        permission_classes=[IsAuthenticated],
     )
     def shopping_cart(self, request):
         if request.method == 'POST':
