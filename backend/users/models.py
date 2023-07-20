@@ -4,32 +4,11 @@ from django.db import models
 
 
 class User(AbstractUser):
-    username = models.CharField(
-        'username',
-        max_length=150,
-        unique=True,
-        blank=False,
-        validators=[
-            RegexValidator(
-                regex=r'^[\w.@+-]+'
-            )
-        ]
-    )
     email = models.EmailField(
         'email address',
         max_length=254,
         blank=False,
         unique=True,
-    )
-    first_name = models.CharField(
-        'first name',
-        max_length=150,
-        blank=False,
-    )
-    last_name = models.CharField(
-        'last name',
-        max_length=150,
-        blank=False,
     )
 
     class Meta:

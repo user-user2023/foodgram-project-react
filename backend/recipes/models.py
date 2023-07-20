@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, RegexValidator
 from django.db import models
 
 User = get_user_model()
@@ -16,6 +16,12 @@ class Tags(models.Model):
         max_length=7,
         unique=True,
         default='#49B64E',
+        validators=[
+            RegexValidator(
+                regex='^#[a-fA-F0-9]{6}$',
+                message='Цвет должен быть в формате HEX',
+            )
+        ]
     )
     slug = models.SlugField(
         verbose_name='Тег слаг',
@@ -87,7 +93,6 @@ class Recipe(models.Model):
     )
     tags = models.ManyToManyField(
         Tags,
-        through='RecipeTags',
         verbose_name='Теги',
         related_name='recipes',
     )
@@ -136,26 +141,6 @@ class RecipeIngredient(models.Model):
                 name='unique-recipe-ingredient'
             )
         ]
-
-
-class RecipeTags(models.Model):
-    tag = models.ForeignKey(
-        Tags,
-        on_delete=models.CASCADE,
-        verbose_name='Теги',
-    )
-    recipe = models.ForeignKey(
-        Recipe,
-        on_delete=models.CASCADE,
-        verbose_name='Рецепт',
-    )
-
-    class Meta:
-        verbose_name = 'тег рецепта'
-        verbose_name_plural = 'теги рецептов'
-
-    def __str__(self):
-        return f'{self.tag} + {self.recipe}'
 
 
 class Favorite(models.Model):

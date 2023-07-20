@@ -1,19 +1,20 @@
-from api.pagination import LimitPagination
-from api.permissions import IsAuthorOrAdminOrReadOnly
 from django.contrib.auth import get_user_model
 from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
+
 from djoser.views import UserViewSet
-from recipes.models import (Favorite, Ingredient, Recipe, RecipeIngredient,
-                            ShoppingCart, Tags)
 from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from users.models import Follow
 
+from api.pagination import LimitPagination
+from api.permissions import IsAuthorOrAdminOrReadOnly
+from recipes.models import (Favorite, Ingredient, Recipe, RecipeIngredient,
+                            ShoppingCart, Tags)
+from users.models import Follow
 from .filter import IngredientSearchFilter, RecipeFilter
 from .mixins import CreateOrDeleteMixin
 from .serializers import (CreateRecipeSerializer, IngredientSerializer,
@@ -90,9 +91,11 @@ class RecipeViewSet(viewsets.ModelViewSet, CreateOrDeleteMixin):
     )
     def favorite(self, request, pk=None):
         if request.method == 'POST':
-            return self.create_favorite(Favorite, pk, request)
+            message = 'Такой рецепт уже есть в избранном.'
+            return self.create_favorite(Favorite, pk, request, message)
         elif request.method == 'DELETE':
-            return self.delete_favorite(Favorite, pk, request)
+            message = 'Такого рецепта нет в избранном.'
+            return self.delete_favorite(Favorite, pk, request, message)
 
     @action(
         methods=['POST', 'DELETE'],
@@ -101,9 +104,11 @@ class RecipeViewSet(viewsets.ModelViewSet, CreateOrDeleteMixin):
     )
     def shopping_cart(self, request):
         if request.method == 'POST':
-            return self.create_cart(ShoppingCart)
+            message = 'Такой рецепт уже есть в корзине.'
+            return self.create_cart(ShoppingCart, message)
         elif request.method == 'DELETE':
-            return self.delete_cart(ShoppingCart)
+            message = 'Такого рецепта нет в корзине.'
+            return self.delete_cart(ShoppingCart, message)
 
     @action(detail=False, permission_classes=[IsAuthenticated])
     def download_shopping_cart(self, request):

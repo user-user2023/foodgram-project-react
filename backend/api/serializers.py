@@ -1,9 +1,11 @@
 from django.contrib.auth import get_user_model
+from django.db import transaction
+
 from djoser.serializers import UserCreateSerializer, UserSerializer
-from drf_extra_fields.fields import Base64ImageField
+from rest_framework import serializers
+
 from recipes.models import (Favorite, Ingredient, Recipe, RecipeIngredient,
                             ShoppingCart, Tags)
-from rest_framework import serializers
 from users.models import Follow
 
 User = get_user_model()
@@ -57,7 +59,6 @@ class TagsSerializer(serializers.ModelSerializer):
 
 
 class RecipeIngredientSerializer(serializers.ModelSerializer):
-
     id = serializers.ReadOnlyField(source='ingredient.id')
     name = serializers.ReadOnlyField(source='ingredient.name')
     measurement_unit = serializers.ReadOnlyField(
@@ -90,7 +91,6 @@ class RecipeSerializer(serializers.ModelSerializer):
     author = MyUserSerializer(read_only=True)
     tags = TagsSerializer(read_only=True, many=True)
     ingredients = serializers.SerializerMethodField()
-    image = Base64ImageField()
 
     class Meta:
         model = Recipe
@@ -129,8 +129,6 @@ class RecipeSerializer(serializers.ModelSerializer):
 
 
 class AddIngredientRecipeSerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField()
-    amount = serializers.IntegerField()
 
     class Meta:
         model = RecipeIngredient
@@ -141,14 +139,11 @@ class AddIngredientRecipeSerializer(serializers.ModelSerializer):
 
 
 class CreateRecipeSerializer(serializers.ModelSerializer):
-    author = MyUserSerializer(read_only=True)
     ingredients = AddIngredientRecipeSerializer(many=True)
     tags = serializers.PrimaryKeyRelatedField(
         queryset=Tags.objects.all(),
         many=True
     )
-    image = Base64ImageField()
-    cooking_time = serializers.IntegerField()
 
     class Meta:
         model = Recipe
@@ -198,25 +193,24 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
         ]
         RecipeIngredient.objects.bulk_create(recipe_ingredients)
 
+    @transaction.atomic
     def create(self, validated_data):
         ingredients = validated_data.pop('ingredients')
         tags = validated_data.pop('tags')
-        cooking_time = validated_data.pop('cooking_time')
         author = self.context.get('request').user
         new_recipe = Recipe.objects.create(
             author=author,
-            cooking_time=cooking_time,
             **validated_data
         )
         new_recipe.tags.set(tags)
         self.create_ingredients(new_recipe, ingredients)
         return new_recipe
 
+    @transaction.atomic
     def update(self, recipe, validated_data):
-        if "ingredients" in validated_data:
-            ingredients = validated_data.pop("ingredients")
-            recipe.recipe_ingredients.all().delete()
-            self.create_ingredients(recipe, ingredients)
+        ingredients = validated_data.pop("ingredients")
+        recipe.recipe_ingredients.all().delete()
+        self.create_ingredients(recipe, ingredients)
         tags = validated_data.pop("tags")
         recipe.tags.set(tags)
         return super().update(recipe, validated_data)
@@ -271,14 +265,13 @@ class SubscriptionSerializer(serializers.ModelSerializer):
                 context=self.context,
             )
             return serializer.data
+        return []
 
     def get_recipes_count(self, obj):
-        return Recipe.objects.filter(author=obj).count()
+        return obj.recipes.count()
 
     def get_is_subscribed(self, obj):
         request = self.context.get('request')
-        if request.is_authenticated:
-            return Follow.objects.filter(
-                user=request.user, author=obj.pk
-            ).exists()
-        return False
+        return Follow.objects.filter(
+            user=request.user, author=obj.pk
+        ).exists()
