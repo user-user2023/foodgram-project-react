@@ -40,7 +40,7 @@ jobs:
         with:
           context: ./backend
           push: true
-          tags: practicum2023/foodgram:latest
+          tags: practicum2023/backend:latest
 
   deploy:
     runs-on: ubuntu-latest
@@ -54,7 +54,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.PASSPHRASE }}
           script: |
-            sudo docker pull practicum2023/foodgram:latest
+            sudo docker pull practicum2023/backend:latest
             sudo docker pull practicum2023/frontend:latest
             sudo docker-compose stop
             rm -f .env
