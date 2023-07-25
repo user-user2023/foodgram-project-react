@@ -57,7 +57,7 @@ jobs:
             sudo docker pull practicum2023/backend:latest
             sudo docker pull practicum2023/frontend:latest
             sudo docker-compose stop
-            rm -f .env
+            sudo rm -f .env
             sudo touch .env
             echo MY_KEY=${{ secrets.MY_KEY }} >> .env
             echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env
