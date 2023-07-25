@@ -1,10 +1,8 @@
 import csv
 import os
-
 from django.core.management import BaseCommand
 
 from recipes.models import Ingredient
-
 
 CSV_FILES_DIR = os.path.dirname(os.path.dirname(os.getcwd()))
 
