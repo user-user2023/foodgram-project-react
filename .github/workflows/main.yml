@@ -39,8 +39,9 @@ jobs:
         uses: docker/build-push-action@v2 
         with:
           context: ./backend
+          file: ./backend/Dockerfile
           push: true
-          tags: practicum2023/foodgram:latest
+          tags: practicum2023/foodgram:v001
 
   deploy:
     runs-on: ubuntu-latest
@@ -54,22 +55,35 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.PASSPHRASE }}
           script: |
-            sudo systemctl stop nginx
-            sudo systemctl stop gunicorn
+            sudo docker pull practicum2023/foodgram:v001
+            sudo docker pull practicum2023/frontend:v001
             sudo docker-compose stop
-            sudo docker-compose rm backend
-            sudo docker-compose rm frontend
-            sudo docker pull practicum2023/foodgram
-            sudo docker pull practicum2023/frontend
-            touch .env
+            sudo touch .env
+            echo MY_KEY=${{ secrets.MY_KEY }} >> .env
             echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env
             echo DB_NAME=${{ secrets.DB_NAME }} >> .env
             echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} >> .env
             echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
             echo DB_HOST=${{ secrets.DB_HOST }} >> .env
             echo DB_PORT=${{ secrets.DB_PORT }} >> .env
-            echo MY_KEY=${{ secrets.MY_KEY }} >> .env
-            sudo docker-compose up -d 
+            sudo docker-compose up -d
+
+#            sudo systemctl stop nginx
+#            sudo systemctl stop gunicorn
+#            sudo docker-compose stop
+#            sudo docker-compose rm backend
+#            sudo docker-compose rm frontend
+#            sudo docker pull practicum2023/foodgram:v001
+#            sudo docker pull practicum2023/frontend:v001
+#            touch .env
+#            echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env
+#            echo DB_NAME=${{ secrets.DB_NAME }} >> .env
+#            echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} >> .env
+#            echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
+#            echo DB_HOST=${{ secrets.DB_HOST }} >> .env
+#            echo DB_PORT=${{ secrets.DB_PORT }} >> .env
+#            echo MY_KEY=${{ secrets.MY_KEY }} >> .env
+#            sudo docker-compose up -d 
 
 #  send_message:
 #    runs-on: ubuntu-latest
