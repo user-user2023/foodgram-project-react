@@ -59,6 +59,7 @@ jobs:
             sudo docker-compose stop
             sudo rm -f .env
             sudo touch .env
+            sudo chmod 666 .env
             echo MY_KEY=${{ secrets.MY_KEY }} >> .env
             echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env
             echo DB_NAME=${{ secrets.DB_NAME }} >> .env
