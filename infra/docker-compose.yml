@@ -7,6 +7,13 @@ services:
     env_file:
       - ./.env
 
+  frontend:
+    image: practicum2023/frontend
+    volumes:
+      - ../frontend/:/app/result_build/
+    depends_on:
+      - db
+
   backend:
     image: practicum2023/foodgram
     restart: always
@@ -17,13 +24,6 @@ services:
       - db
     env_file:
       - ./.env
-
-  frontend:
-    image: practicum2023/frontend
-    volumes:
-      - ../frontend/:/app/result_build/
-    depends_on:
-      - backend
 
   nginx:
     image: nginx:1.19.3
@@ -37,6 +37,7 @@ services:
       - media_value:/var/html/media/
     depends_on:
       - frontend
+      - backend
 
 volumes:
   db_data:
