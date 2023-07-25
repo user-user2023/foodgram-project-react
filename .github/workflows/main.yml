@@ -54,8 +54,8 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.PASSPHRASE }}
           script: |
-            sudo docker pull practicum2023/foodgram:v001
-            sudo docker pull practicum2023/frontend:v001
+            sudo docker pull practicum2023/foodgram
+            sudo docker pull practicum2023/frontend
             sudo docker-compose stop
             sudo touch .env
             echo MY_KEY=${{ secrets.MY_KEY }} >> .env
