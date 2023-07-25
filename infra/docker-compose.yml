@@ -4,11 +4,14 @@ services:
     image: postgres:13.0-alpine
     volumes:
       - db_data:/var/lib/postgresql/data/
+    restart: always
+    ports:
+      - '5432:5432'
     env_file:
       - ./.env
 
   backend:
-    image: practicum2023/backend:v004
+    image: practicum2023/foodgram_backend:v001
     restart: always
     volumes:
       - static_value:/app/static/
@@ -19,7 +22,7 @@ services:
       - ./.env
 
   frontend:
-    image: practicum2023/frontend:v004
+    image: practicum2023/foodgram_frontend:v001
     volumes:
       - ../frontend/:/app/result_build/
     depends_on:
@@ -36,7 +39,7 @@ services:
       - static_value:/var/html/static/
       - media_value:/var/html/media/
     depends_on:
-      - frontend
+      - backend
 
 volumes:
   db_data:
