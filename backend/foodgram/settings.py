@@ -207,8 +207,8 @@ DJOSER = {
 
     },
     'PERMISSIONS': {
-        'user': ["djoser.permissions.IsAuthenticated"],
-        'user_list': ['rest_framework.permissions.IsAuthenticatedOrReadOnly'],
+        'user': ['rest_framework.permissions.IsAuthenticated'],
+        'user_list': ['rest_framework.permissions.IsAuthenticated'],
     },
     'LOGIN_FIELD': 'email',
     'HIDE_USERS': False,
