@@ -80,4 +80,4 @@ jobs:
             echo MY_KEY=${{ secrets.MY_KEY }} >> .env
             sudo docker pull practicum2023/foodgram_backend:latest
             sudo docker pull practicum2023/foodgram_frontend:latest
-            sudo docker-compose up -d 
+            sudo docker-compose up -d --build
