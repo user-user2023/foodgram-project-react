@@ -5,6 +5,8 @@ from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet
 from rest_framework import permissions, status, viewsets
+from rest_framework.generics import ListAPIView
+from rest_framework.views import APIView
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -130,3 +132,52 @@ class TagViewSet(viewsets.ModelViewSet):
     queryset = Tags.objects.all()
     serializer_class = TagsSerializer
     permission_classes = (permissions.AllowAny,)
+
+
+class FollowUserView(APIView):
+    permission_classes = (IsAuthenticated,)
+    pagination_class = LimitPagination
+
+#    @action(
+#        detail=False,
+#        permission_classes=[IsAuthenticated],
+#        serializer_class=SubscriptionSerializer
+#    )
+#    def subscriptions(self, request):
+#        user = request.user
+#        queryset = User.objects.filter(followings__user=user)
+#        pag_queryset = self.paginate_queryset(queryset)
+#        serializer = SubscriptionSerializer(pag_queryset, many=True)
+#        return self.get_paginated_response(serializer.data)
+
+    @action(
+        detail=True,
+        methods=['POST', 'DELETE'],
+        serializer_class=SubscriptionSerializer,
+        permission_classes=[IsAuthenticated]
+    )
+    def subscribe(self, request, id):
+        user = request.user
+        author = get_object_or_404(User, pk=id)
+        if request.method == 'POST':
+            serializer = SubscriptionSerializer(
+                author, data=request.data, context={'request': request}
+            )
+            serializer.is_valid(raise_exception=True)
+            Follow.objects.create(user=user, author=author)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        if request.method == 'DELETE':
+            follow = get_object_or_404(
+                Follow, user=user, author=author
+            )
+            follow.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class SubscriptionsView(ListAPIView):
+    serializer_class = SubscriptionSerializer
+    pagination_class = LimitPagination
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return self.request.user.subscribers.all()
