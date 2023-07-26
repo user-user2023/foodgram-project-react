@@ -11,11 +11,11 @@ services:
   backend:
     image: practicum2023/foodgram_backend:latest
     restart: always
-    command: |
-        python manage.py collectstatic --no-input &&
-        python manage.py migrate &&
-        python manage.py import_ingredients_csv &&
-        python manage.py load_tags &&
+    command: sh -c '
+        python manage.py collectstatic --no-input;
+        python manage.py migrate;
+        python manage.py import_ingredients_csv;
+        python manage.py load_tags;'
     volumes:
       - static_value:/app/static/
       - media_value:/app/media/
