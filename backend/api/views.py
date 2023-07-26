@@ -6,7 +6,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet
 from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from api.pagination import LimitPagination
@@ -29,7 +29,7 @@ class MyUserViewSet(UserViewSet):
 
     @action(
         detail=False,
-        permission_classes=[AllowAny],
+        permission_classes=[IsAuthenticated],
         serializer_class=SubscriptionSerializer
     )
     def subscriptions(self, request):
@@ -43,7 +43,7 @@ class MyUserViewSet(UserViewSet):
         detail=True,
         methods=['POST', 'DELETE'],
         serializer_class=SubscriptionSerializer,
-        permission_classes=[AllowAny]
+        permission_classes=[IsAuthenticated]
     )
     def subscribe(self, request, id):
         user = request.user
