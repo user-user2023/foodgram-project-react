@@ -25,46 +25,6 @@ from .serializers import (CreateRecipeSerializer, IngredientSerializer,
 User = get_user_model()
 
 
-class MyUserViewSet(UserViewSet):
-    serializer_class = MyUserSerializer
-    pagination_class = LimitPagination
-
-    @action(
-        detail=False,
-        permission_classes=[IsAuthenticated],
-        serializer_class=SubscriptionSerializer
-    )
-    def subscriptions(self, request):
-        user = request.user
-        queryset = User.objects.filter(followings__user=user)
-        pag_queryset = self.paginate_queryset(queryset)
-        serializer = SubscriptionSerializer(pag_queryset, many=True)
-        return self.get_paginated_response(serializer.data)
-
-    @action(
-        detail=True,
-        methods=['POST', 'DELETE'],
-        serializer_class=SubscriptionSerializer,
-        permission_classes=[IsAuthenticated]
-    )
-    def subscribe(self, request, id):
-        user = request.user
-        author = get_object_or_404(User, pk=id)
-        if request.method == 'POST':
-            serializer = SubscriptionSerializer(
-                author, data=request.data, context={'request': request}
-            )
-            serializer.is_valid(raise_exception=True)
-            Follow.objects.create(user=user, author=author)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        if request.method == 'DELETE':
-            follow = get_object_or_404(
-                Follow, user=user, author=author
-            )
-            follow.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-
-
 class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
@@ -137,18 +97,6 @@ class TagViewSet(viewsets.ModelViewSet):
 class FollowUserView(APIView):
     permission_classes = (IsAuthenticated,)
     pagination_class = LimitPagination
-
-#    @action(
-#        detail=False,
-#        permission_classes=[IsAuthenticated],
-#        serializer_class=SubscriptionSerializer
-#    )
-#    def subscriptions(self, request):
-#        user = request.user
-#        queryset = User.objects.filter(followings__user=user)
-#        pag_queryset = self.paginate_queryset(queryset)
-#        serializer = SubscriptionSerializer(pag_queryset, many=True)
-#        return self.get_paginated_response(serializer.data)
 
     @action(
         detail=True,
