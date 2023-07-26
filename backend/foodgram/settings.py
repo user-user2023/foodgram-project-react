@@ -20,7 +20,7 @@ BASE_DIR: Path = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('MY_KEY', default=1)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 # DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = ['*']
@@ -66,7 +66,7 @@ MEDIA_ROOT = BASE_DIR / MEDIA_URL
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.AllowAny',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
@@ -75,6 +75,9 @@ REST_FRAMEWORK = {
         'django_filters.rest_framework.DjangoFilterBackend',
     ],
 }
+#    'DEFAULT_PERMISSION_CLASSES': [
+#        'rest_framework.permissions.IsAuthenticated',
+#    ],
 
 
 TEMPLATES = [
@@ -187,9 +190,23 @@ DJOSER = {
         'current_user': 'api.serializers.MyUserSerializer',
     },
     'PERMISSIONS': {
-        'user': ['rest_framework.permissions.AllowAny'],
-        'user_list': ['rest_framework.permissions.IsAuthenticated'],
+        'user': ["djoser.permissions.CurrentUserOrAdminOrReadOnly"],
+        'user_list': ['rest_framework.permissions.IsAuthenticatedOrReadOnly'],
     },
     'LOGIN_FIELD': 'email',
     'HIDE_USERS': False,
 }
+
+# DJOSER = {
+#     'SERIALIZERS': {
+#         'user_create': 'api.serializers.MyUserCreateSerializer',
+#         'user': 'api.serializers.MyUserSerializer',
+#         'current_user': 'api.serializers.MyUserSerializer',
+#     },
+#     'PERMISSIONS': {
+#         'user': ['rest_framework.permissions.AllowAny'],
+#         'user_list': ['rest_framework.permissions.IsAuthenticated'],
+#     },
+#     'LOGIN_FIELD': 'email',
+#     'HIDE_USERS': False,
+# }
