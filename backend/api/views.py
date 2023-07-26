@@ -42,7 +42,8 @@ class MyUserViewSet(UserViewSet):
     @action(
         detail=True,
         methods=['POST', 'DELETE'],
-        serializer_class=SubscriptionSerializer
+        serializer_class=SubscriptionSerializer,
+        permission_classes=[IsAuthenticated]
     )
     def subscribe(self, request, id):
         user = request.user
