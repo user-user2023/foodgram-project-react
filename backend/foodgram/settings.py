@@ -64,17 +64,6 @@ STATIC_URL = '/static/'
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / MEDIA_URL
 
-REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',
-    ],
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
-    ],
-    'DEFAULT_FILTER_BACKENDS': [
-        'django_filters.rest_framework.DjangoFilterBackend',
-    ],
-}
 #    'DEFAULT_PERMISSION_CLASSES': [
 #        'rest_framework.permissions.IsAuthenticated',
 #    ],
@@ -183,20 +172,6 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-DJOSER = {
-    'SERIALIZERS': {
-        'user_create': 'api.serializers.MyUserCreateSerializer',
-        'user': 'api.serializers.MyUserSerializer',
-        'current_user': 'api.serializers.MyUserSerializer',
-    },
-    'PERMISSIONS': {
-        'user': ["djoser.permissions.CurrentUserOrAdminOrReadOnly"],
-        'user_list': ['rest_framework.permissions.IsAuthenticatedOrReadOnly'],
-    },
-    'LOGIN_FIELD': 'email',
-    'HIDE_USERS': False,
-}
-
 # DJOSER = {
 #     'SERIALIZERS': {
 #         'user_create': 'api.serializers.MyUserCreateSerializer',
@@ -210,3 +185,31 @@ DJOSER = {
 #     'LOGIN_FIELD': 'email',
 #     'HIDE_USERS': False,
 # }
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ],
+}
+
+DJOSER = {
+    'SERIALIZERS': {
+        'user_create': 'api.serializers.MyUserCreateSerializer',
+        'user': 'api.serializers.MyUserSerializer',
+        'current_user': 'api.serializers.MyUserSerializer',
+
+    },
+    'PERMISSIONS': {
+        'user': ["djoser.permissions.IsAuthenticated"],
+        'user_list': ['rest_framework.permissions.IsAuthenticatedOrReadOnly'],
+    },
+    'LOGIN_FIELD': 'email',
+    'HIDE_USERS': False,
+}
