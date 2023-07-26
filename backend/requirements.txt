@@ -3,13 +3,11 @@ psycopg2-binary==2.8.6
 python-dotenv
 pytz==2021.1
 sqlparse==0.4.1
-djangorestframework==3.14.0
+djangorestframework==3.12.4
 Pillow==9.5.0
-Djoser
+djoser==2.1.0
 psycopg2-binary==2.8.6
 python-dotenv
 gunicorn==20.0.4
-djangorestframework==3.14.0
-djangorestframework-simplejwt==5.2.2
 drf-extra-fields==3.5.0
 django-filter==23.2
