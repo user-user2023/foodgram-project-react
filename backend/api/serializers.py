@@ -146,7 +146,7 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
         many=True
     )
     image = Base64ImageField(max_length=None)
-
+    author = MyUserSerializer(read_only=True)
 
     class Meta:
         model = Recipe
@@ -160,6 +160,8 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
             'text',
             'cooking_time'
         ]
+
+    def author
 
     def validate_tags(self, tags):
         if not tags:
