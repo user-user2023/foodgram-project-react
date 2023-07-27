@@ -190,8 +190,11 @@ DJOSER = {
         'current_user': 'api.serializers.MyUserSerializer',
     },
     'PERMISSIONS': {
-        'user': ['rest_framework.permissions.AllowAny'],
+        'user': ['djoser.permissions.CurrentUserOrAdminOrReadOnly'],
         'user_list': ['rest_framework.permissions.AllowAny'],
+        'username_reset': ['rest_framework.permissions.IsAdminUser'],
+        'username_reset_confirm': ['rest_framework.permissions.IsAdminUser'],
+        'user_delete': ['rest_framework.permissions.IsAdminUser'],
     },
     'LOGIN_FIELD': 'email',
     'HIDE_USERS': False,
