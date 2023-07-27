@@ -144,7 +144,7 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
         queryset=Tags.objects.all(),
         many=True
     )
-    image = Base64ImageField(max_length=None)
+    image = Base64ImageField()
 
     class Meta:
         model = Recipe
@@ -197,8 +197,7 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         ingredients = validated_data.pop('ingredients')
         tags = validated_data.pop('tags')
-#        author = self.context.get('request').user
-        author = self.context['request'].user
+        author = self.context.get('request').user
         new_recipe = Recipe.objects.create(
             author=author,
             **validated_data
