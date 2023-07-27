@@ -195,6 +195,9 @@ DJOSER = {
     },
     'LOGIN_FIELD': 'email',
     'HIDE_USERS': False,
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
 }
 
 # DJOSER = {
