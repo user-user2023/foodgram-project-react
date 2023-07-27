@@ -91,6 +91,7 @@ class RecipeSerializer(serializers.ModelSerializer):
     author = MyUserSerializer(read_only=True)
     tags = TagsSerializer(read_only=True, many=True)
     ingredients = serializers.SerializerMethodField()
+    image = Base64ImageField()
 
     class Meta:
         model = Recipe
@@ -144,7 +145,7 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
         queryset=Tags.objects.all(),
         many=True
     )
-    image = Base64ImageField(max_length=None)
+    image = Base64ImageField()
 
     class Meta:
         model = Recipe
