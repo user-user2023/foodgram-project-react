@@ -95,7 +95,7 @@ class TagViewSet(viewsets.ModelViewSet):
 
 class FollowUserView(APIView):
     permission_classes = (IsAuthenticated,)
-    pagination_class = LimitPagination
+#    pagination_class = LimitPagination
 
     @action(
         detail=True,
@@ -123,7 +123,7 @@ class FollowUserView(APIView):
 
 class SubscriptionsView(ListAPIView):
     serializer_class = SubscriptionSerializer
-    pagination_class = LimitPagination
+#    pagination_class = LimitPagination
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
