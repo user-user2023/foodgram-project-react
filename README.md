@@ -2,9 +2,7 @@
 # Развернутый проект доступен по ссылке:
 # http://51.250.31.157/redoc/
 # http://51.250.31.157/admin/
-# LOGIN : admin1
-# EMAIL : admin1@mmail.ru
-# PASS  : admin1
+
 
 # foodgram
 [![Workflow Status](https://github.com/user-user2023/foodgram-project-react/actions/workflows/main.yml/badge.svg)](https://github.com/user-user2023/yamdb_final/actions/workflows/main.yml)
