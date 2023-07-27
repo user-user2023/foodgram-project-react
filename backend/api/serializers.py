@@ -1,6 +1,5 @@
 from django.contrib.auth import get_user_model
 from django.db import transaction
-from drf_extra_fields.fields import Base64ImageField
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from rest_framework import serializers
 
@@ -27,9 +26,11 @@ class MyUserSerializer(UserSerializer):
 
     def get_is_subscribed(self, obj):
         request = self.context.get('request')
-        if self.context.get('request').user.is_anonymous:
-            return False
-        return obj.subscribers.filter(username=request.user).exists()
+        if request.is_authenticated:
+            return Follow.objects.filter(
+                user=request.user, author=obj.pk
+            ).exists()
+        return False
 
 
 class MyUserCreateSerializer(UserCreateSerializer):
@@ -89,7 +90,6 @@ class RecipeSerializer(serializers.ModelSerializer):
     author = MyUserSerializer(read_only=True)
     tags = TagsSerializer(read_only=True, many=True)
     ingredients = serializers.SerializerMethodField()
-    image = Base64ImageField()
 
     class Meta:
         model = Recipe
@@ -143,7 +143,6 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
         queryset=Tags.objects.all(),
         many=True
     )
-    image = Base64ImageField()
 
     class Meta:
         model = Recipe

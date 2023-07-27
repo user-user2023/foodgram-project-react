@@ -189,7 +189,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',
+        'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
@@ -199,33 +199,17 @@ REST_FRAMEWORK = {
     ],
 }
 
-# DJOSER = {
-#     'SERIALIZERS': {
-#         'user_create': 'api.serializers.MyUserCreateSerializer',
-# #        'user': 'api.serializers.MyUserSerializer',
-# #        'current_user': 'api.serializers.MyUserSerializer',
-# #
-#     },
-#     'PERMISSIONS': {
-#         'user': ['rest_framework.permissions.AllowAny'],
-#         'user_list': ['rest_framework.permissions.AllowAny'],
-#     },
-#     'LOGIN_FIELD': 'email',
-#     'HIDE_USERS': False,
-# }
-
-
 DJOSER = {
-    'HIDE_USERS': False,
-    'LOGIN_FIELD': 'email',
     'SERIALIZERS': {
-        "user_create": "api.serializers.UserCreateSerializer",
-        "user": "api.serializers.UserSerializer",
-        "current_user": "api.serializers.UserSerializer",
-        
+        'user_create': 'api.serializers.MyUserCreateSerializer',
+#        'user': 'api.serializers.MyUserSerializer',
+#        'current_user': 'api.serializers.MyUserSerializer',
+#
     },
     'PERMISSIONS': {
-        "user": ["djoser.permissions.CurrentUserOrAdminOrReadOnly"],
-        "user_list": ["rest_framework.permissions.IsAuthenticatedOrReadOnly"],
+        'user': ['rest_framework.permissions.AllowAny'],
+        'user_list': ['rest_framework.permissions.AllowAny'],
     },
+    'LOGIN_FIELD': 'email',
+    'HIDE_USERS': False,
 }
