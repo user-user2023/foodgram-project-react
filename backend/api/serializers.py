@@ -42,7 +42,7 @@ class MyUserCreateSerializer(UserCreateSerializer):
             'username',
             'first_name',
             'last_name',
-            'email',
+#            'email',
             'password',
         )
 
