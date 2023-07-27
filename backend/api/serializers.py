@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import transaction
+from drf_extra_fields.fields import Base64ImageField
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from rest_framework import serializers
 
@@ -143,6 +144,7 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
         queryset=Tags.objects.all(),
         many=True
     )
+    image = Base64ImageField(max_length=None)
 
     class Meta:
         model = Recipe
