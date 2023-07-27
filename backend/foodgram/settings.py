@@ -200,6 +200,8 @@ REST_FRAMEWORK = {
 }
 
 DJOSER = {
+    'HIDE_USERS': False,
+    'LOGIN_FIELD': 'email',
     'SERIALIZERS': {
         'user_create': 'api.serializers.MyUserCreateSerializer',
         'user': 'api.serializers.MyUserSerializer',
@@ -210,6 +212,4 @@ DJOSER = {
         'user': ['rest_framework.permissions.AllowAny'],
         'user_list': ['rest_framework.permissions.AllowAny'],
     },
-    'LOGIN_FIELD': 'email',
-    'HIDE_USERS': False,
 }
