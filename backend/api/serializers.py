@@ -129,6 +129,9 @@ class RecipeSerializer(serializers.ModelSerializer):
 
 
 class AddIngredientRecipeSerializer(serializers.ModelSerializer):
+    id = serializers.PrimaryKeyRelatedField(
+        queryset=Ingredient.objects.all()
+    )
 
     class Meta:
         model = RecipeIngredient
@@ -186,12 +189,12 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
     def create_ingredients(self, recipe, ingredients):
         recipe_ingredients = [
             RecipeIngredient(
-                ingredient_id=ingr.get('id'),
+                recipe=recipe,
+                ingredient=ingr.get('id'),
                 amount=ingr.get('amount'),
-                recipe=recipe
             ) for ingr in ingredients
         ]
-        return RecipeIngredient.objects.bulk_create(recipe_ingredients)
+        RecipeIngredient.objects.bulk_create(recipe_ingredients)
 
     @transaction.atomic
     def create(self, validated_data):
