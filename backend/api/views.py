@@ -99,6 +99,7 @@ class FollowUserView(APIView):
 
     @action(
         detail=True,
+        url_path='subscribe',
         methods=['POST', 'DELETE'],
         serializer_class=SubscriptionSerializer,
         permission_classes=[IsAuthenticated]
@@ -127,13 +128,8 @@ class SubscriptionsView(ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return self.request.user.subscribers.all()
+        return self.request.user.followings.all()
 
-    @action(
-        detail=False,
-        permission_classes=[IsAuthenticated],
-        serializer_class=SubscriptionSerializer
-    )
     def subscriptions(self, request):
         user = request.user
         queryset = User.objects.filter(followings__user=user)
