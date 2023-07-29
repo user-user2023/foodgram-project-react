@@ -7,7 +7,6 @@ from .views import (FollowUserView, IngredientViewSet, RecipeViewSet,
 app_name = 'api'
 
 v1_router = DefaultRouter()
-# v1_router.register('users', MyUserViewSet, basename='users')
 v1_router.register('recipes', RecipeViewSet, basename='recipes')
 v1_router.register('ingredients', IngredientViewSet, basename='ingredients')
 v1_router.register('tags', TagViewSet, basename='tags')

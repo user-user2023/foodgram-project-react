@@ -264,25 +264,28 @@ class SubscriptionSerializer(serializers.ModelSerializer):
                   'recipes_count')
 
     def get_recipes(self, obj):
-        recipes_limit = self.context.get('recipes_limit')
-        if recipes_limit:
-            recipes = obj.author.recipes.all()[:int(recipes_limit)]
-            serializer = PreviewRecipeSerializer(
-                instance=recipes,
-                many=True,
-                context=self.context,
-            )
-            return serializer.data
-        return []
+        queryset = (
+            obj.author.recipes.all().order_by('-pub_date'))
+        limit = self.context.get('request').query_params.get('recipes_limit')
+        if limit:
+            try:
+                queryset = queryset[:int(limit)]
+            except ValueError:
+                raise ValueError('Количество рецепьов указано неверно.')
+        return PreviewRecipeSerializer(queryset, many=True).data
 
     def get_recipes_count(self, obj):
         return obj.author.recipes.all().count()
+
+    def get_is_subscribed(self, obj):
+        return obj.user.followings.filter(author=obj.author).exists()
+
+
+
+
 
 #    def get_is_subscribed(self, obj):
 #        request = self.context.get('request')
 #        return Follow.objects.filter(
 #            user=request.user, author=obj.pk
 #        ).exists()
-
-    def get_is_subscribed(self, obj):
-        return obj.user.followings.filter(author=obj.author).exists()
