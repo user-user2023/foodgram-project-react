@@ -6,27 +6,15 @@ from dotenv import find_dotenv, load_dotenv
 load_dotenv(find_dotenv())
 
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-# BASE_DIR = Path(__file__).resolve().parent.parent
-
 BASE_DIR: Path = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-
 SECRET_KEY = os.getenv('MY_KEY', default=1)
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-# DEBUG = os.getenv('DEBUG', 'False') == 'True'
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
-# ALLOWED_HOSTS = ['*']
 
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -75,10 +63,6 @@ REST_FRAMEWORK = {
         'django_filters.rest_framework.DjangoFilterBackend',
     ],
 }
-#    'DEFAULT_PERMISSION_CLASSES': [
-#        'rest_framework.permissions.IsAuthenticated',
-#    ],
-
 
 TEMPLATES = [
     {
@@ -98,10 +82,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'foodgram.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': os.getenv('DB_ENGINE', default='django.db.backends.postgresql'),
@@ -120,28 +100,6 @@ DATABASES = {
 #    }
 # }
 
-# DATABASES = {
-#     'default': {
-# ##        'ENGINE': os.getenv('DB_ENGINE', default='django.db.backends.postgresql'),
-# ##        'NAME': os.getenv('DB_NAME', default='postgres'),
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-# #        'USER': os.getenv('POSTGRES_USER', default='postgres'),
-# #        'PASSWORD': os.getenv('POSTGRES_PASSWORD', default='00001'),
-# #        'HOST': os.getenv('DB_HOST', default='db'),
-# #        'PORT': os.getenv('DB_PORT', default=5432),
-#     }
-# }
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
-# Password validation
-# https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -158,9 +116,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/3.2/topics/i18n/
 
 LANGUAGE_CODE = 'ru'
 
@@ -202,17 +157,3 @@ DJOSER = {
         'rest_framework.authentication.TokenAuthentication',
     ],
 }
-
-# DJOSER = {
-#     'SERIALIZERS': {
-#         'user_create': 'api.serializers.MyUserCreateSerializer',
-#         'user': 'api.serializers.MyUserSerializer',
-#         'current_user': 'api.serializers.MyUserSerializer',
-#     },
-#     'PERMISSIONS': {
-#         'user': ['rest_framework.permissions.AllowAny'],
-#         'user_list': ['rest_framework.permissions.IsAuthenticated'],
-#     },
-#     'LOGIN_FIELD': 'email',
-#     'HIDE_USERS': False,
-# }

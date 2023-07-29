@@ -1,8 +1,9 @@
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from djoser.serializers import UserCreateSerializer, UserSerializer
-from rest_framework import serializers
 from drf_extra_fields.fields import Base64ImageField
+
+from rest_framework import serializers
 
 from recipes.models import (Favorite, Ingredient, Recipe, RecipeIngredient,
                             ShoppingCart, Tags)
@@ -235,11 +236,6 @@ class PreviewRecipeSerializer(serializers.ModelSerializer):
             'image',
             'cooking_time',
         )
-#        read_only_fields = (
-#            'name',
-#            'image',
-#            'cooking_time',
-#        )
 
 
 class SubscriptionSerializer(serializers.ModelSerializer):
@@ -265,7 +261,8 @@ class SubscriptionSerializer(serializers.ModelSerializer):
 
     def get_recipes(self, obj):
         queryset = (
-            obj.author.recipes.all().order_by('-pub_date'))
+            obj.author.recipes.all().order_by('-pub_date')
+        )
         limit = self.context.get('request').query_params.get('recipes_limit')
         if limit:
             try:
@@ -278,14 +275,9 @@ class SubscriptionSerializer(serializers.ModelSerializer):
         return obj.author.recipes.all().count()
 
     def get_is_subscribed(self, obj):
-        return obj.user.followings.filter(author=obj.author).exists()
-
-
-
-
-
-#    def get_is_subscribed(self, obj):
-#        request = self.context.get('request')
-#        return Follow.objects.filter(
-#            user=request.user, author=obj.pk
-#        ).exists()
+        request = self.context.get('request')
+        if request is None or request.user.is_anonymous:
+            return False
+        return Follow.objects.filter(
+            user=request.user, author=obj.id
+        ).exists()

@@ -11,7 +11,6 @@ v1_router.register('recipes', RecipeViewSet, basename='recipes')
 v1_router.register('ingredients', IngredientViewSet, basename='ingredients')
 v1_router.register('tags', TagViewSet, basename='tags')
 
-
 urlpatterns = [
     path(
         'users/subscriptions/',
