@@ -7,7 +7,7 @@ from .serializers import PreviewRecipeSerializer
 
 
 class CreateOrDeleteMixin():
-    def create_favorite_and_cart(model, recipe_pk, request, message):
+    def create_favorite_and_cart(self, model, recipe_pk, request, message):
         user = request.user
         recipe = get_object_or_404(Recipe, pk=recipe_pk)
         if model.objects.filter(recipe=recipe, user=user).exists():
@@ -18,7 +18,7 @@ class CreateOrDeleteMixin():
         )
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    def delete_favorite_and_cart(model, recipe_pk, request, message):
+    def delete_favorite_and_cart(self, model, recipe_pk, request, message):
         user = request.user
         recipe = get_object_or_404(Recipe, pk=recipe_pk)
         if not model.objects.filter(user=user, recipe=recipe).exists():

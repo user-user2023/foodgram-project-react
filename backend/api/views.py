@@ -53,23 +53,23 @@ class RecipeViewSet(viewsets.ModelViewSet, CreateOrDeleteMixin):
     def favorite(self, request, pk=None):
         if request.method == 'POST':
             message = 'Такой рецепт уже есть в избранном.'
-            return self.create_favorite(Favorite, pk, request, message)
+            return self.create_favorite_and_cart(Favorite, pk, request, message)
         elif request.method == 'DELETE':
             message = 'Такого рецепта нет в избранном.'
-            return self.delete_favorite(Favorite, pk, request, message)
+            return self.delete_favorite_and_cart(Favorite, pk, request, message)
 
     @action(
         methods=['POST', 'DELETE'],
         detail=True,
         permission_classes=[IsAuthenticated],
     )
-    def shopping_cart(self, request):
+    def shopping_cart(self, request, pk=None):
         if request.method == 'POST':
             message = 'Такой рецепт уже есть в корзине.'
-            return self.create_cart(ShoppingCart, message)
+            return self.create_favorite_and_cart(ShoppingCart, pk, request, message)
         elif request.method == 'DELETE':
             message = 'Такого рецепта нет в корзине.'
-            return self.delete_cart(ShoppingCart, message)
+            return self.delete_favorite_and_cart(ShoppingCart, pk, request, message)
 
     @action(detail=False, permission_classes=[IsAuthenticated])
     def download_shopping_cart(self, request):
@@ -129,12 +129,24 @@ class SubscriptionsView(ListAPIView):
     def get_queryset(self):
         return self.request.user.subscribers.all()
 
+    @action(
+        detail=False,
+        permission_classes=[IsAuthenticated],
+        serializer_class=SubscriptionSerializer
+    )
     def subscriptions(self, request):
         user = request.user
         queryset = User.objects.filter(followings__user=user)
         pag_queryset = self.paginate_queryset(queryset)
         serializer = SubscriptionSerializer(pag_queryset, many=True)
         return self.get_paginated_response(serializer.data)
+
+#    def subscriptions(self, request):
+#        user = request.user
+#        queryset = User.objects.filter(followings__user=user)
+#        pag_queryset = self.paginate_queryset(queryset)
+#        serializer = SubscriptionSerializer(pag_queryset, many=True)
+#        return self.get_paginated_response(serializer.data)
 
 
 # class MyUserViewSet(UserViewSet):
