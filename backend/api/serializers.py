@@ -276,10 +276,13 @@ class SubscriptionSerializer(serializers.ModelSerializer):
         return []
 
     def get_recipes_count(self, obj):
-        return obj.author.recipes.count()
+        return obj.author.recipes.all().count()
+
+#    def get_is_subscribed(self, obj):
+#        request = self.context.get('request')
+#        return Follow.objects.filter(
+#            user=request.user, author=obj.pk
+#        ).exists()
 
     def get_is_subscribed(self, obj):
-        request = self.context.get('request')
-        return Follow.objects.filter(
-            user=request.user, author=obj.pk
-        ).exists()
+        return obj.user.followings.filter(author=obj.author).exists()

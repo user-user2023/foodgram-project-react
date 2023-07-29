@@ -3,7 +3,7 @@ from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import permissions, status, viewsets
+from rest_framework import permissions, status, viewsets, exceptions
 from rest_framework.generics import ListAPIView
 from rest_framework.views import APIView
 from rest_framework.decorators import action
@@ -93,33 +93,91 @@ class TagViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)
 
 
+#class FollowUserView(APIView):
+#    permission_classes = (IsAuthenticated,)
+#    pagination_class = LimitPagination
+#
+#    @action(
+#        detail=True,
+#        url_path='subscribe',
+#        methods=['POST', 'DELETE'],
+#        serializer_class=SubscriptionSerializer,
+#        permission_classes=[IsAuthenticated]
+#    )
+#    def subscribe(self, request, id):
+#        user = request.user
+#        author = get_object_or_404(User, pk=id)
+#        if request.method == 'POST':
+#            serializer = SubscriptionSerializer(
+#                author, data=request.data, context={'request': request}
+#            )
+#            serializer.is_valid(raise_exception=True)
+#            Follow.objects.create(user=user, author=author)
+#            return Response(serializer.data, status=status.HTTP_201_CREATED)
+#        if request.method == 'DELETE':
+#            follow = get_object_or_404(
+#                Follow, user=user, author=author
+#            )
+#            follow.delete()
+#            return Response(status=status.HTTP_204_NO_CONTENT)
+
+
 class FollowUserView(APIView):
     permission_classes = (IsAuthenticated,)
     pagination_class = LimitPagination
+    serializer_class = SubscriptionSerializer
 
-    @action(
-        detail=True,
-        url_path='subscribe',
-        methods=['POST', 'DELETE'],
-        serializer_class=SubscriptionSerializer,
-        permission_classes=[IsAuthenticated]
-    )
-    def subscribe(self, request, id):
+    def post(self, request, id):
         user = request.user
         author = get_object_or_404(User, pk=id)
-        if request.method == 'POST':
-            serializer = SubscriptionSerializer(
-                author, data=request.data, context={'request': request}
+        if user == author:
+            raise exceptions.ValidationError(
+                'Нельзя подписаться на себя самого.'
             )
-            serializer.is_valid(raise_exception=True)
-            Follow.objects.create(user=user, author=author)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        if request.method == 'DELETE':
-            follow = get_object_or_404(
-                Follow, user=user, author=author
+        if Follow.objects.filter(user=user, author=author).exists():
+            raise exceptions.ValidationError(
+                'Подписка уже существует'
             )
-            follow.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+        Follow.objects.create(user=user, author=author)
+        serializer = self.serializer_class(
+            author, data=request.data, context={'request': request}
+        )
+        serializer.is_valid(raise_exception=True)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+ ##class FollowUserView(APIView):
+ ##    permission_classes = (IsAuthenticated,)
+ ##    pagination_class = LimitPagination
+ ##    serializer_class = SubscriptionSerializer
+ ##
+ ##    def post(self, request, id):
+ ##        user = request.user
+ ##        author = get_object_or_404(User, pk=id)
+ ##        if user == author:
+ ##            raise exceptions.ValidationError(
+ ##                'Нельзя подписаться на себя самого.'
+ ##            )
+ ##        if Follow.objects.filter(user=user, author=author).exists():
+ ##            raise exceptions.ValidationError(
+ ##                'Подписка уже существует'
+ ##            )
+ ##        Follow.objects.create(user=user, author=author)
+ ##        serializer = self.get_serializer(author)
+ ##        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+#        serializer = self.serializer_class(
+#            author, data=request.data, context={'request': request}
+#        )
+#        serializer.is_valid(raise_exception=True)
+
+
+    def delete(self, request, id):
+        user = request.user
+        author = get_object_or_404(User, pk=id)
+        follow = get_object_or_404(Follow, user=user, author=author)
+        follow.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class SubscriptionsView(ListAPIView):
