@@ -12,7 +12,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         for row in csv.reader(open(
-            f'/app/data/ingredients.csv',
+            '/app/data/ingredients.csv',
             'r',
             encoding='utf-8'
         )):
