@@ -121,9 +121,8 @@ class FollowUserView(APIView):
             )
         Follow.objects.create(user=user, author=author)
         serializer = self.serializer_class(
-            author, data=request.data, context={'request': request}
+            author, context={'request': request}
         )
-        serializer.is_valid(raise_exception=True)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def delete(self, request, id):
@@ -140,7 +139,7 @@ class SubscriptionsView(ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return self.request.user.followings.all()
+        return User.objects.filter(subscribers__user=self.request.user)
 
     def subscriptions(self, request):
         user = request.user
