@@ -2,7 +2,8 @@
 # Развернутый проект доступен по ссылке:
 # http://51.250.31.157/recipes/
 # http://51.250.31.157/admin/
-
+# логин : admin1
+# пароль : admin2023
 
 # foodgram
 [![Workflow Status](https://github.com/user-user2023/foodgram-project-react/actions/workflows/main.yml/badge.svg)](https://github.com/user-user2023/yamdb_final/actions/workflows/main.yml)
