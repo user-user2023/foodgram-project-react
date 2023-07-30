@@ -6,7 +6,7 @@
 # пароль : admin2023
 
 # foodgram
-[![Workflow Status](https://github.com/user-user2023/foodgram-project-react/actions/workflows/main.yml/badge.svg)](https://github.com/user-user2023/yamdb_final/actions/workflows/main.yml)
+[![Workflow Status](https://github.com/user-user2023/foodgram-project-react/actions/workflows/main.yml/badge.svg)](https://github.com/user-user2023/foodgram-project-react/actions/workflows/main.yml)
 
 # Дипломный проект <<Продуктовый помощник>>
 На этом сервисе пользователи смогут публиковать рецепты, подписываться на публикации других пользователей, добавлять понравившиеся рецепты в список «Избранное», а перед походом в магазин скачивать сводный список продуктов, необходимых для приготовления одного или нескольких выбранных блюд.
